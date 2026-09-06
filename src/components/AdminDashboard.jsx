@@ -23,7 +23,7 @@ export function AdminDashboard({ onSuccess }) {
     setBusy(false)
   }
 
-async function resetEvent() {
+  async function resetEvent() {
     if (!supabase) return
     const confirmed = window.confirm('Reset the event? This will set every participant score to 0 and delete all score history. This cannot be undone.')
     if (!confirmed) return
