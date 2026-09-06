@@ -23,24 +23,29 @@ export function AdminDashboard({ onSuccess }) {
     setBusy(false)
   }
 
-  async function resetEvent() {
-    if (!supabase) return
-    const confirmed = window.confirm('Reset the event? This will set every participant score to 0 and delete all score history. This cannot be undone.')
-    if (!confirmed) return
+ async function resetEvent() {
+  if (!supabase) return;
 
-    setBusy(true)
-    setMessage('Resetting event…')
-    const { error } = await supabase.rpc('reset_event')
-    if (error) {
-      setMessage(error.message)
-    } else {
-      setSelectedId('')
-      setMessage('Event reset successfully. All scores are now 0.')
-      onSuccess?.('Event reset successfully')
-    }
-    setBusy(false)
+  const confirmed = window.confirm(
+    'Reset the event? This will set every participant score to 0 and delete all score history. This cannot be undone.'
+  );
+  if (!confirmed) return;
+
+  setBusy(true);
+  setMessage('Resetting event…');
+
+  const { error } = await supabase.rpc('reset_event');
+
+  if (error) {
+    setMessage(`Reset failed: ${error.message}`);
+  } else {
+    setSelectedId?.('');
+    setMessage('Event reset successfully. All scores are now 0.');
+    onSuccess?.('Event reset successfully');
   }
 
+  setBusy(false);
+}
   return <section className="mx-auto mt-8 max-w-4xl"><div className="mb-7"><p className="text-sm font-bold text-indigo-600">Scoring control</p><h1 className="mt-1 text-4xl font-black tracking-tight text-slate-950">Admin Dashboard</h1><p className="mt-2 text-sm text-slate-500">Choose a participant, then award the points for the completed station.</p><p className="mt-2 break-all font-mono text-xs text-slate-400">Admin link: {window.location.origin}/admin</p></div>
     <div className="mb-5 rounded-2xl border border-indigo-100 bg-indigo-50/70 px-5 py-4">
       <p className="text-xs font-extrabold uppercase tracking-[.16em] text-indigo-500">Share with participants</p>
