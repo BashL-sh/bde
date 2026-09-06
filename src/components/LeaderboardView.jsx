@@ -1,0 +1,11 @@
+import { AnimatePresence, motion } from 'framer-motion'
+
+const rankBox = { 1:'bg-amber-100 text-amber-700', 2:'bg-slate-200 text-slate-700', 3:'bg-orange-100 text-orange-700' }
+
+export function LeaderboardView({ participants, status, error }) {
+  return <section className="mx-auto mt-8 w-full max-w-4xl">
+    <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-sm font-bold text-indigo-600">Live standings</p><h1 className="mt-1 text-4xl font-black tracking-tight text-slate-950">Leaderboard</h1><p className="mt-2 text-sm leading-6 text-slate-500">Scores update automatically for everyone viewing this page.</p></div><div className="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-black text-emerald-700 sm:flex"><span className="h-2 w-2 rounded-full bg-emerald-500"/>{status === 'live' ? 'Live' : status}</div></div>
+    {error && <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{error}</div>}
+    {participants.length === 0 ? <div className="rounded-3xl border border-dashed border-slate-300 bg-white/70 p-14 text-center"><p className="font-bold text-slate-700">No participants yet.</p><p className="mt-1 text-sm text-slate-400">Add participants from the Admin page.</p></div> : <div className="space-y-3"><AnimatePresence initial={false}>{participants.map(p => <motion.div key={p.id} layout initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{layout:{type:'spring',stiffness:420,damping:34}}} className={`grid grid-cols-[52px_1fr_auto] items-center gap-4 rounded-2xl border px-4 py-4 shadow-sm ${p.rank <= 3 ? 'bg-white' : 'bg-white/80'}`}><div className={`grid h-10 w-10 place-items-center rounded-xl text-sm font-black ${rankBox[p.rank] || 'bg-slate-100 text-slate-500'}`}>{p.rank}</div><div className="min-w-0"><p className="truncate font-extrabold text-slate-900">{p.name}</p><p className="mt-0.5 text-xs font-medium text-slate-400">Participant</p></div><div className="text-right"><motion.p key={p.score} initial={{scale:1.12}} animate={{scale:1}} className="text-xl font-black tabular-nums text-slate-950">{p.score}</motion.p><p className="text-[10px] font-bold uppercase tracking-[.18em] text-slate-400">points</p></div></motion.div>)}</AnimatePresence></div>}
+  </section>
+}
